@@ -1,7 +1,8 @@
 typedef struct{
   char valor;
   int x, y, z;
-  int baldes; //baldes com água naquele vérice
+  int baldes; //baldes com água naquele vértice
+  int tempo; //tempo que girobaldo levou até chegar lá
 }Vertice;
 
 typedef struct ElementoFila{

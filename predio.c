@@ -16,6 +16,8 @@ void lerDimensoesPredio(Predio *predio);
 void alocaPredio(Predio *predio);
 void imprimePredio(Predio *predio);
 void lePlantaPredio(Predio *predio);
+bool isPontoNoPredio(Predio *predio, int x, int y, int z);
+
 
 //Lê as dimensões do prédio
 void lerDimensoesPredio(Predio *predio){
@@ -65,4 +67,8 @@ void imprimePredio(Predio *predio){
 		}
 		printf("\n");
 	}
+}
+
+bool isPontoNoPredio(Predio *predio, int x, int y, int z){
+	return ((x >= 0 && x < predio->h) && (y >= 0 && y < predio->w) && (z >= 0 && z <predio->altura));
 }
