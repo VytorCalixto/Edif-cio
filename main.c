@@ -3,125 +3,108 @@
 #include <stdbool.h>
 #include "predio.c"
 #include "fila.c"
-#include "plantaMarcada.c"
+#include "planta.c"
 
-//Retorna true se encontra a saída, false caso contrário
-int buscaEmLargura(Predio *predio, Vertice raiz);
-
-/*Converte um ponto da planta para um vértice
-* x,y = ponto no plano
-* z = andar do predio
-*/
-Vertice pontoParaVertice(Predio *predio, int x, int y, int z);
-
-//Enfileira vértices adjacentes aos vértices dados
-void enfileiraAdjacentes(Predio *predio, Fila *fila, Vertice vertice, Planta plantaMarcada);
-Vertice *getAdjacentes(Predio *predio, Vertice vertice);
-bool isVerticeValido(Vertice vertice);
+int buscaEmLargura(Predio predio, Vertice raiz);
+void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *planta);
+Vertice *getAdjacentes(Vertice vertice, Predio predio);
+bool isVerticeValido(Vertice v);
+Vertice pontoParaVertice(Predio predio, int x, int y, int z);
 
 void main(){
 	Predio predio;
 	lerDimensoesPredio(&predio);
 	scanf("%d", &predio.jirobaldo.baldes);
-	lePlantaPredio(&predio);
-	imprimePredio(&predio);
-	//Busca começa no vértice do Jirobaldo, com 0 baldes com água
+	lePredio(&predio);
+	//Raiz da busca em largura: Jirobaldo, com 0 baldes cheios e tempo inicial = 0
 	Vertice raiz = {'J', predio.jirobaldo.x, predio.jirobaldo.y, predio.jirobaldo.z, 0, 0};
-	int tempo = buscaEmLargura(&predio, raiz);
+	int tempo = buscaEmLargura(predio, raiz);
 	printf("%d\n", tempo);
-
-  return;
+	return;
 }
 
-int buscaEmLargura(Predio *predio, Vertice raiz){
-	Fila fila; //fila de vértices
-	Planta plantaMarcada;
+int buscaEmLargura(Predio predio, Vertice raiz){
+	Fila fila; //Fila dos vértices.
+	Planta plantas[predio.jirobaldo.baldes+1]; //Estrutura para marcar os vértices visitados.
 	int tempo = -1;
 
 	iniciaFila(&fila);
-	iniciaPlanta(predio, &plantaMarcada);
-	marcaVertice(raiz, &plantaMarcada);
+	int i;
+	for(i = 0; i <= predio.jirobaldo.baldes; i++){
+		iniciaPlanta(&plantas[i],&predio);
+	}
+	
+	marcaVertice(&plantas[0], raiz); //Jirobaldo sempre começa com 0 baldes
 	enfileira(&fila, raiz);
+
 	while(!vaziaFila(&fila)){
 		Vertice frente = desenfileira(&fila);
-		if(frente.baldes > raiz.baldes){
-			int bTempo = buscaEmLargura(predio, frente); //faz uma busca em largura com aquela quantidade de baldes.
-			if(tempo == -1 || bTempo < tempo){
-				tempo = bTempo;
-			}
-		}
+		enfileiraAdjacentes(&fila, frente, predio, &plantas[frente.baldes]);
 		if(frente.valor == 'S'){
 			if(tempo == -1 || frente.tempo < tempo){
 				tempo = frente.tempo;
 			}
 		}
-		enfileiraAdjacentes(predio, &fila, frente, plantaMarcada);
 	}
+
 	return tempo;
 }
 
-Vertice pontoParaVertice(Predio *predio, int x, int y, int z){
-	char valor = '/';
-	if(isPontoNoPredio(predio, x, y, z)){
-		valor = predio->pisos[z].pontos[x][y];
-	}
-	Vertice vertice = {valor, x, y, z, 0, 0};
-	return vertice;
-}
-
-void enfileiraAdjacentes(Predio *predio, Fila *fila, Vertice vertice, Planta plantaMarcada){
-	int i,	tam = 6; //Só existem 6 adjacentes possíveis
-	Vertice *adjacentes = getAdjacentes(predio, vertice);
-	for(i = 0; i < tam; i++){
+void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *planta){
+	Vertice *adjacentes = getAdjacentes(vertice, predio);
+	int i;
+	for(i = 0; i < 6; i++){
 		Vertice v = adjacentes[i];
 		if(isVerticeValido(v)){
-			if(plantaMarcada.planta[v.x][v.y][v.z] != -1){
+			if(!isVerticeMarcado(planta, v)){
 				v.tempo = vertice.tempo + 1;
 				v.baldes = vertice.baldes;
-
+				
 				if(v.valor == 'F'){
-					v.baldes = vertice.baldes - 1;
-					marcaVertice(v, &plantaMarcada);
+					v.baldes--;
 					if(v.baldes >= 0){
+						marcaVertice(planta, v);
 						enfileira(fila, v);
 					}
 				}else if(v.valor == 'T'){
+					marcaVertice(planta, v);
+					//Enfileira a opção em que Jirobaldo não enche baldes
+					enfileira(fila, v);
+
+					//Enfileira as opções em que Jirobaldo enche o balde
 					int j;
-					marcaVertice(v, &plantaMarcada);
-					enfileira(fila, v); //Enfileira a alternativa em que ele não enche os baldes
-					//Enfileira as possibilidades de baldes
-					for(j = vertice.baldes + 1; j < predio->jirobaldo.baldes; j++){
+					for(j = vertice.baldes + 1; j <= predio.jirobaldo.baldes; j++){
 						v.baldes = j;
 						v.tempo++;
 						enfileira(fila, v);
 					}
 				}else{
+					marcaVertice(planta, v);
 					enfileira(fila, v);
-					marcaVertice(v, &plantaMarcada);
 				}
 			}
 		}
 	}
 }
 
-Vertice *getAdjacentes(Predio *predio, Vertice vertice){
-	Vertice norte, sul, leste, oeste;
-	Vertice acima = {'/', 0, 0, 1, 0, 0};
-	Vertice abaixo = {'/', 0, 0, 1, 0, 0};
-	Vertice adjacentes[6];
+Vertice *getAdjacentes(Vertice vertice, Predio predio){
+	Vertice norte, sul, leste, oeste, acima, abaixo;
+	acima.valor = '#';
+	abaixo.valor = '#';
+	Vertice adjacentes[6]; //Só existem seis adjacentes possíveis
 
-	norte = pontoParaVertice(predio, vertice.x, vertice.y-1, vertice.z);
-	sul = pontoParaVertice(predio, vertice.x, vertice.y+1, vertice.z);
-	leste = pontoParaVertice(predio, vertice.x+1, vertice.y, vertice.z);
-	oeste = pontoParaVertice(predio, vertice.x-1, vertice.y, vertice.z);
+	norte 	= pontoParaVertice(predio, vertice.x - 1, vertice.y, vertice.z);
+	sul 	= pontoParaVertice(predio, vertice.x + 1, vertice.y, vertice.z);
+	leste 	= pontoParaVertice(predio, vertice.x, vertice.y + 1, vertice.z);
+	oeste 	= pontoParaVertice(predio, vertice.x, vertice.y - 1, vertice.z);
 
-	if(vertice.valor == 'U'){
-		acima = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z+1);
-	}else if(vertice.valor == 'D'){
-		abaixo = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z-1);
+	if(vertice.valor == 'D'){
+		abaixo = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z - 1);
+	}else if(vertice.valor == 'U'){
+		acima = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z + 1);
 	}else if(vertice.valor == 'E'){
-		abaixo = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z-1);
-		acima = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z+1);
+		acima = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z + 1);
+		abaixo = pontoParaVertice(predio, vertice.x, vertice.y, vertice.z - 1);
 	}
 
 	adjacentes[0] = norte;
@@ -143,4 +126,16 @@ bool isVerticeValido(Vertice vertice){
 		}
 	}
 	return false;
+}
+
+Vertice pontoParaVertice(Predio predio, int x, int y, int z){
+	//			 valor, x, y, z, baldes, tempo
+	Vertice v = {'#', 	0, 0, 0, 0, 	 0};
+	if(isPontoNoPredio(&predio, x, y, z)){
+		v.valor = predio.pisos[z].pontos[x][y];
+		v.x = x;
+		v.y = y;
+		v.z = z;
+	}
+	return v;
 }

@@ -2,7 +2,7 @@ typedef struct{
   char valor;
   int x, y, z;
   int baldes; //baldes com água naquele vértice
-  int tempo; //tempo que girobaldo levou até chegar lá
+  int tempo; //tempo que girobaldo levou até chegar nesse vértice
 }Vertice;
 
 typedef struct ElementoFila{
@@ -45,7 +45,7 @@ Vertice desenfileira(Fila *fila){
 void imprimeFila(Fila *fila){
   ElementoFila *aux = fila->frente->prox;
   while(aux != NULL){
-    printf("%c %dx%dx%d - %db\n", aux->vertice.valor, aux->vertice.x, aux->vertice.y, aux->vertice.z, aux->vertice.baldes);
+    printf("%c %dx%dx%d - %db - %dt\n", aux->vertice.valor, aux->vertice.x, aux->vertice.y, aux->vertice.z, aux->vertice.baldes, aux->vertice.tempo);
     aux = aux->prox;
   }
 }

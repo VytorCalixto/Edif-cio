@@ -15,21 +15,21 @@ typedef struct{
 void lerDimensoesPredio(Predio *predio);
 void alocaPredio(Predio *predio);
 void imprimePredio(Predio *predio);
-void lePlantaPredio(Predio *predio);
+void lePredio(Predio *predio);
 bool isPontoNoPredio(Predio *predio, int x, int y, int z);
 
 
 //Lê as dimensões do prédio
 void lerDimensoesPredio(Predio *predio){
-	scanf("%d %d %d", &predio->altura, &predio->w, &predio->h);
+	scanf(" %d %d %d", &predio->altura, &predio->w, &predio->h);
 }
 
 //Lê a planta do prédio
-void lePlantaPredio(Predio *predio){
+void lePredio(Predio *predio){
 	int i, j, k;
 	alocaPredio(predio);
 
-	for(i = 0; i < predio->altura; i ++){
+	for(i = 0; i < predio->altura; i++){
 		for(j = 0; j < predio->h; j++){
 			for(k = 0; k < predio->w; k++){
 				scanf(" %c", &predio->pisos[i].pontos[j][k]);
@@ -49,9 +49,9 @@ void alocaPredio(Predio *predio){
 	predio->pisos = (Pavimento *) malloc(sizeof(Pavimento) * predio->altura);
 
 	for(i = 0; i < predio->altura; i++){
-		predio->pisos[i].pontos = (char **) malloc(sizeof(char*) * predio->w);
-		for(j = 0; j < predio->w; j++){
-			predio->pisos[i].pontos[j] = (char *) malloc(sizeof(char) * predio->h);
+		predio->pisos[i].pontos = (char **) malloc(sizeof(char*) * predio->h);
+		for(j = 0; j < predio->h; j++){
+			predio->pisos[i].pontos[j] = (char *) malloc(sizeof(char) * predio->w);
 		}
 	}
 }
