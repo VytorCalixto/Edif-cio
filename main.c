@@ -8,7 +8,7 @@
 int buscaEmLargura(Predio predio, Vertice raiz);
 void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *planta);
 Vertice *getAdjacentes(Vertice vertice, Predio predio);
-bool isVerticeValido(Vertice v);
+bool isVerticeValido(Predio predio, Vertice v);
 Vertice pontoParaVertice(Predio predio, int x, int y, int z);
 
 void main(){
@@ -55,7 +55,7 @@ void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *pla
 	int i;
 	for(i = 0; i < 6; i++){
 		Vertice v = adjacentes[i];
-		if(isVerticeValido(v)){
+		if(isVerticeValido(predio, v)){
 			if(!isVerticeMarcado(planta, v)){
 				v.tempo = vertice.tempo + 1;
 				v.baldes = vertice.baldes;
@@ -117,12 +117,12 @@ Vertice *getAdjacentes(Vertice vertice, Predio predio){
 	return adjacentes;
 }
 
-bool isVerticeValido(Vertice vertice){
+bool isVerticeValido(Predio predio, Vertice vertice){
 	char cValidos[8] = {'.', 'E', 'J', 'U', 'D', 'F', 'S', 'T'};
 	int i;
 	for(i = 0; i < 8; i ++){
 		if(vertice.valor == cValidos[i]){
-			return true;
+			return true && (isPontoNoPredio(&predio, vertice.x, vertice.y, vertice.z));
 		}
 	}
 	return false;
