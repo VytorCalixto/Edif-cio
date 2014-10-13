@@ -1,2 +1,2 @@
 all:
-	gcc -g main.c -o main -w
+	gcc -g main.c -o fogo -w
