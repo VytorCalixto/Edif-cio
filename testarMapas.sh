@@ -1,4 +1,6 @@
 #!/bin/bash
+#@authors ibsa14 enba14 vsbc14
+
 
 wget http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/site.tar.gz
 tar -xzf site.tar.gz
@@ -22,3 +24,4 @@ do
 done
 
 rm -fr site
+
