@@ -51,8 +51,12 @@ int buscaEmLargura(Predio predio, Vertice raiz){
 }
 
 void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *planta){
-	Vertice *adjacentes = getAdjacentes(vertice, predio);
+	Vertice *adj = getAdjacentes(vertice, predio);
 	int i;
+	Vertice adjacentes[6];
+	for(i = 0; i < 6; i++){
+		adjacentes[i] = adj[i];
+	}
 	for(i = 0; i < 6; i++){
 		Vertice v = adjacentes[i];
 		if(isVerticeValido(predio, v)){
