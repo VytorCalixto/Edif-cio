@@ -12,10 +12,14 @@ typedef struct{
     Jirobaldo jirobaldo;
 }Predio;
 
+//Lê as dimensões do prédio na ordem altura, colunas (w), linhas (h)
 void lerDimensoesPredio(Predio *predio);
+//Aloca o prédio
 void alocaPredio(Predio *predio);
 void imprimePredio(Predio *predio);
+//Lê a situação do prédio (mapa)
 void lePredio(Predio *predio);
+//Retorna true caso o ponto (x, y, z) esteja no prédio, false caso contrário
 bool isPontoNoPredio(Predio *predio, int x, int y, int z);
 
 

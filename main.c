@@ -5,10 +5,18 @@
 #include "fila.c"
 #include "planta.c"
 
+//Faz a busca em largura e devolve o tempo para Jirobaldo sair do prédio ou -1 caso seja impossível.
 int buscaEmLargura(Predio predio, Vertice raiz);
+//Enfileira vértices adjacentes ao vértice passado como parâmetro
 void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *planta);
+//Retorna um vetor com todos os vértices adjacentes ao vértice passado como parâmetro.
 Vertice *getAdjacentes(Vertice vertice, Predio predio);
+/**
+ * Retorna true se o valor do vértice é valido (não é parede ou algo diferente dos caracteres válidos) e o vértice está dentro dos limites do mapa
+ * false caso contrário
+ */
 bool isVerticeValido(Predio predio, Vertice v);
+// Converte um ponto (x, y, z) do prédio para um Vertice
 Vertice pontoParaVertice(Predio predio, int x, int y, int z);
 
 void main(){
@@ -24,8 +32,14 @@ void main(){
 }
 
 int buscaEmLargura(Predio predio, Vertice raiz){
-	Fila fila; //Fila dos vértices.
-	Planta plantas[predio.jirobaldo.baldes+1]; //Estrutura para marcar os vértices visitados.
+	//Fila dos vértices.
+	Fila fila;
+	/**
+	 * Estrutura para marcar os vértices visitados.
+	 * Número de plantas = número de baldes
+	 * Uma vez que Jirobaldo chegue em uma torneira e encha os baldes ele pode retornar para um fogo que já passou.
+	 */
+	Planta plantas[predio.jirobaldo.baldes+1];
 	int tempo = -1;
 
 	iniciaFila(&fila);
@@ -53,10 +67,12 @@ int buscaEmLargura(Predio predio, Vertice raiz){
 void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *planta){
 	Vertice *adj = getAdjacentes(vertice, predio);
 	int i;
+	//O loop abaixo é uma redundância necessária por causa da versão do gcc do dinf
 	Vertice adjacentes[6];
 	for(i = 0; i < 6; i++){
 		adjacentes[i] = adj[i];
 	}
+
 	for(i = 0; i < 6; i++){
 		Vertice v = adjacentes[i];
 		if(isVerticeValido(predio, v)){

@@ -1,8 +1,9 @@
-//Serve para marcar os vértices em que já passamos.
+//Serve para marcar os vértices em que já passamos. True caso a busca já passou por lá, false caso contrário
 typedef struct{
     bool *** planta;
 }Planta;
 
+//Aloca a planta com o mesmo tamanho do prédio e define todas as posições como false
 void iniciaPlanta(Planta *planta, Predio *predio){
     int i, j, k;
     planta->planta = (bool ***) malloc(sizeof(bool **) * predio->h);
@@ -18,10 +19,12 @@ void iniciaPlanta(Planta *planta, Predio *predio){
     }
 }
 
+//Marca que um vértice foi enfileirado
 void marcaVertice(Planta *planta, Vertice v){
     planta->planta[v.x][v.y][v.z] = true;
 }
 
+//Retorna true se o vértice já tiver sido marcado, false caso contrário
 bool isVerticeMarcado(Planta *planta, Vertice v){
     return (planta->planta[v.x][v.y][v.z]);
 }
