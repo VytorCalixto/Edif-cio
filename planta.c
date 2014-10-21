@@ -26,7 +26,7 @@ void marcaVertice(Planta *planta, Vertice v){
 
 //Retorna true se o vértice já tiver sido marcado, false caso contrário
 bool isVerticeMarcado(Planta *planta, Vertice v){
-    return (planta->planta[v.x][v.y][v.z]) && (v.valor != 'S') && (v.tempo >= planta->planta[v.x][v.y][v.z]); 
+    return (planta->planta[v.x][v.y][v.z]) && (v.tempo >= planta->planta[v.x][v.y][v.z]); 
 }
 
 void imprimePlanta(Planta planta, Predio *predio){

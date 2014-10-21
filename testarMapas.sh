@@ -1,12 +1,14 @@
 #!/bin/bash
 #@authors ibsa14 enba14 vsbc14
 
-
-wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/site.tar.gz | tar -xz
-wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/avaliacao.tar.gz | tar -xz
+echo "Extraindo arquivos:"
+wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/site.tar.gz | tar -xzv
+wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/avaliacao.tar.gz | tar -xzv
 make
 clear
 
+numfiles=$(($(ls -l avaliacao/ | grep '^-' | wc -l) + $(ls -l site/ | grep '^-' | wc -l)))
+echo "Executando $(($numfiles/2)) testes."
 FILES=avaliacao/*.out
 for f in $FILES
 do
