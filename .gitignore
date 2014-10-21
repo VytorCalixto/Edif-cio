@@ -2,4 +2,7 @@ main
 fogo
 *.txt
 /mapa
+/avaliacao
+/site
+*.swp
 testarMapas
