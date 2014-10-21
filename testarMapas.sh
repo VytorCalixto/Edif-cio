@@ -4,8 +4,6 @@
 
 wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/site.tar.gz | tar -xz
 wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/avaliacao.tar.gz | tar -xz
-rm avaliacao.tar.gz
-rm site.tar.gz
 make
 clear
 
