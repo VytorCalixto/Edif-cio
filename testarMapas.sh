@@ -18,8 +18,8 @@ do
 	expected=$(cat $(echo "$name.out"))
 	if [ "$result" != "$expected" ]; then
 		echo -e "\e[0;31mErro no teste $name.\e[0m"
-	#else
-	#	echo -e "\e[0;32mTeste $name ok!\e[0m"
+	else
+		echo -e "\e[0;32mTeste $name ok!\e[0m"
 	fi
 	echo -e "Esperado: $expected. Retornado: $result."
 done

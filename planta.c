@@ -21,9 +21,6 @@ void iniciaPlanta(Planta *planta, Predio *predio){
 
 //Marca que um vértice foi enfileirado
 void marcaVertice(Planta *planta, Vertice v){
-    if(v.valor == 'S'){
-        puts("");
-    }
     planta->planta[v.x][v.y][v.z] = v.tempo;
 }
 
