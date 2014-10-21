@@ -2,10 +2,8 @@
 #@authors ibsa14 enba14 vsbc14
 
 
-wget http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/site.tar.gz
-wget http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/avaliacao.tar.gz
-tar -xzf site.tar.gz
-tar -xzf avaliacao.tar.gz
+wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/site.tar.gz | tar -xz
+wget -qO- http://www.inf.ufpr.br/luciano/grad/ci067_2014_2/avaliacao.tar.gz | tar -xz
 rm avaliacao.tar.gz
 rm site.tar.gz
 make
@@ -20,8 +18,8 @@ do
 	expected=$(cat $(echo "$name.out"))
 	if [ "$result" != "$expected" ]; then
 		echo -e "\e[0;31mErro no teste $name.\e[0m"
-	else
-		echo -e "\e[0;32mTeste $name ok!\e[0m"
+	#else
+	#	echo -e "\e[0;32mTeste $name ok!\e[0m"
 	fi
 	echo -e "Esperado: $expected. Retornado: $result."
 done

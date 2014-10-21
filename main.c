@@ -57,7 +57,10 @@ int buscaEmLargura(Predio predio, Vertice raiz){
 
 	while(!vaziaFila(&fila)){
 		Vertice frente = desenfileira(&fila);
-		enfileiraAdjacentes(&fila, frente, predio, &plantas[frente.baldes]);
+        if(frente.valor == 'T' && frente.x == 1 && frente.y == 2 && frente.z == 3){
+            puts("");
+        }        
+        enfileiraAdjacentes(&fila, frente, predio, &plantas[frente.baldes]);
 		if(frente.valor == 'S'){
 			if(tempo == -1 || frente.tempo < tempo){
 				tempo = frente.tempo;
@@ -75,14 +78,14 @@ void enfileiraAdjacentes(Fila *fila, Vertice vertice, Predio predio, Planta *pla
 	Vertice adjacentes[6];
 	for(i = 0; i < 6; i++){
 		adjacentes[i] = adj[i];
+        adjacentes[i].baldes = vertice.baldes;
+        adjacentes[i].tempo = vertice.tempo + 1;
 	}
 
 	for(i = 0; i < 6; i++){
 		Vertice v = adjacentes[i];
 		if(isVerticeValido(predio, v)){
 			if(!isVerticeMarcado(planta, v)){
-				v.tempo = vertice.tempo + 1;
-				v.baldes = vertice.baldes;
 				
 				if(v.valor == 'F'){
 					v.baldes--;
